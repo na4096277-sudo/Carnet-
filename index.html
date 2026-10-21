@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mon carnet de stage</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--pink:#f58abb;--deep:#d7799f;--soft:#fff4f9;--line:#f5c6dc;--text:#473941;--muted:#9b7b8a;--paper:#fffafd;--bg1:#fff7fb;--bg2:#ffeaf3;--card:#ffffff;--ring:#f3a6c8;--shadow:rgba(224,117,161,.22);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:linear-gradient(135deg,var(--bg1),var(--bg2) 58%,var(--bg1));color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;display:flex;flex-direction:column;align-items:center;padding:16px 12px}
+h1,h2{font-family:"Fraunces",Georgia,serif;margin:0;letter-spacing:-.5px}
+.book{position:relative;width:min(580px,100%);height:clamp(460px,calc(100dvh - 124px),800px);perspective:2200px;border-radius:6px 24px 24px 6px;box-shadow:0 6px 18px rgba(215,121,159,.14)}
+.leaf{position:absolute;inset:0;transform-origin:left center;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--paper);border:1px solid var(--line);border-radius:6px 24px 24px 6px;display:flex;flex-direction:column;overflow:hidden;transition:transform .85s cubic-bezier(.5,.1,.25,1),opacity 0s}
+.leaf:before{content:"";position:absolute;left:0;top:0;bottom:0;width:30px;background:radial-gradient(circle at 15px 18px,var(--bg1) 5px,var(--ring) 5.5px 7.5px,transparent 8px) 0 0/30px 36px repeat-y;pointer-events:none}
+.leaf:after{content:"";position:absolute;top:-80px;right:-60px;width:200px;height:200px;border-radius:50%;background:var(--pink);opacity:.14;pointer-events:none}
+.leaf.flipped{transform:rotateY(-115deg);opacity:0;pointer-events:none;transition:transform .85s cubic-bezier(.5,.1,.25,1),opacity .25s .6s}
+.inner{position:relative;z-index:1;flex:1;overflow-y:auto;padding:26px 22px 12px 46px}
+.pn{position:relative;z-index:1;text-align:center;font-size:12px;color:var(--muted);padding:8px 0 12px;font-weight:700}
+.sub{color:var(--muted);font-size:14px;margin:6px 0 0}
+.cover h1{font-size:44px;line-height:1.02;margin-top:34px;font-weight:800;color:var(--deep)}
+.hearts{color:var(--pink);letter-spacing:6px;margin:14px 0 26px}
+.toc{display:grid;gap:10px;margin:0 0 16px;padding:0;list-style:none}
+.toc button.t{width:100%;text-align:left;display:block;padding:13px 15px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--text);font:inherit;min-height:0;cursor:pointer}
+.toc button.t:hover{background:var(--soft)}
+.toc b{display:block;font-size:16px}
+.toc span.s{font-size:13px;color:var(--muted)}
+.prog{margin-top:9px;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:800;color:var(--deep)}
+.bar{flex:1;height:8px;border-radius:99px;background:var(--soft);border:1px solid var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#f58abb,#f29ac4);border-radius:99px;transition:width .4s}
+.mod h2{font-size:26px;font-weight:800;color:var(--deep);margin-bottom:14px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.f{display:block;font-size:12px;font-weight:800;color:var(--muted)}
+.f.wide{grid-column:1/-1}
+.f input,.f textarea{display:block;width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font:inherit;font-size:15px;font-weight:700;resize:none}
+.f textarea{font-weight:600;min-height:64px}
+input:focus-visible,textarea:focus-visible,button:focus-visible,[contenteditable]:focus-visible,.ck input:focus-visible+span{outline:2px solid var(--pink);outline-offset:2px}
+.thead,.obj{display:grid;grid-template-columns:1fr 56px 56px;column-gap:6px;align-items:center}
+.thead{margin:16px 0 6px;font-size:12px;font-weight:800;color:var(--muted);text-align:center}
+.thead span:first-child{text-align:left;font-family:"Fraunces",Georgia,serif;font-size:17px;color:var(--text)}
+.obj{padding:10px 0;border-top:1px dashed var(--line)}
+.ot{font-size:15px;font-weight:700;line-height:1.35;padding:2px 4px;border-radius:8px;min-height:24px;transition:color .2s}
+.ot:empty:before{content:"Nouvel objectif…";color:var(--muted);font-weight:600}
+.obj.done .ot{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--pink)}
+.ck{display:grid;place-items:center;cursor:pointer;min-height:44px}
+.ck input{position:absolute;opacity:0;width:1px;height:1px}
+.ck span{width:28px;height:28px;border-radius:10px;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;transition:background .2s,border-color .2s,transform .15s}
+.ck input:checked+span{background:var(--pink);border-color:var(--pink);transform:scale(1.06)}
+.ck.m input:checked+span{background:var(--deep);border-color:var(--deep)}
+.ck input:checked+span:after{content:"";width:7px;height:13px;border:solid #fff;border-width:0 3px 3px 0;transform:translateY(-1px) rotate(45deg)}
+.ob{grid-column:1/3;margin:4px 0 0;width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:13px;padding:6px 4px}
+.ob::placeholder{color:var(--muted);opacity:.8}
+.x{margin-top:4px;min-height:32px;min-width:32px;justify-self:center;font-size:18px;border-radius:10px;color:var(--muted)}
+button{border:1px solid var(--line);background:var(--card);color:var(--deep);min-width:42px;min-height:42px;border-radius:15px;font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+button:hover{background:var(--soft)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 8px}
+.row button{padding:0 16px}
+.danger{color:#c0446e}
+.nav{width:min(580px,100%);display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.nav button{font-size:22px}
+.nav .mid{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:800;color:var(--muted)}
+.nav .add{font-size:14px;padding:0 14px}
+@media(max-width:650px){.cover h1{font-size:36px}.inner{padding:22px 16px 10px 42px}.fields{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.leaf,.leaf.flipped{transition:none}}
+.obj.lab{grid-template-columns:1fr 40px;border-top:0;padding:14px 0 4px}
+.obj.lab .x{margin:0}
+.obj.lab.h .ot{font-family:"Fraunces",Georgia,serif;font-size:19px;font-weight:800;color:var(--deep)}
+.obj.lab.g{padding:12px 0 2px}
+.obj.lab.g .ot{font-size:15px;font-weight:800;color:var(--text)}
+.obj.lv1{border-top-style:dotted}
+.obj.lv1 .ot{margin-left:18px;font-size:14px;font-weight:600}
+.obj.lv1 .ob{margin-left:18px;width:calc(100% - 18px)}
+.mod h2{font-size:24px;line-height:1.15}
+.inner{scrollbar-width:thin;scrollbar-color:var(--ring) transparent}
+.inner::-webkit-scrollbar{width:8px}
+.inner::-webkit-scrollbar-thumb{background:var(--ring);border-radius:99px}
+.inner::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+<div class="book" id="book"></div>
+<div class="nav">
+  <button id="prev" title="Page précédente" aria-label="Page précédente">‹</button>
+  <div class="mid"><span id="ind"></span><button class="add" id="addTop">+ Module</button></div>
+  <button id="next" title="Page suivante" aria-label="Page suivante">›</button>
+</div>
+<script>
+const KEY='carnet-stage-v2';
+const uid=()=>'m'+Math.random().toString(36).slice(2,9);
+const DATA=`@@ 2 | Soins infirmiers | Médecine | 2 semaines (en plein temps) | Être capable d’assurer les soins de base
+- Accueillir le malade et sa famille et l’installer confortablement
+- Procéder aux différents lavages des mains et enfiler les gants
+- Préparer le dossier du malade
+- Préparer le malade et le matériel et l’assister lors de la consultation médicale
+- Faire un lit avec ou sans aide
+- Assister le malade pour s’habiller et se déshabiller
+- Désinfecter le lit, la chambre et le matériel contagieux
+- Faire une toilette matinale
+- Faire une toilette intime pour la femme
+- Faire un soin de bouche
+- Pratiquer les soins préventifs d’escarres
+- Placer le bassin de lit
+- Présenter le repas au malade et l’assister
+## Réaliser les différentes positions :
+> Décubitus dorsal
+> Décubitus latéral
+> Décubitus ventral
+> Position demi-assise – assise
+> Position déclive
+> Position proclive
+- Observer et relever les anomalies au niveau des téguments et muqueuses
+## Pratiquer des prélèvements :
+> Urines
+> Selles
+## Effectuer les examens d’urines suivants et les interpréter :
+> Recherche d’albumine
+> Recherche de sucre
+> Recherche d’acétone
+> Recherche de pH
+- Établir une feuille de température
+## Prendre, enregistrer et interpréter les constantes :
+> Pouls
+> Tension artérielle
+> Température
+> Respiration
+> Diurèse
+> Poids
+> Taille
+## Administrer une thérapeutique par voie :
+> Orale
+> Intramusculaire
+> Sous-cutanée
+> Intradermique
+> Intraveineuse
+- Expliquer aux malades la pose d’un suppositoire ou ovule
+- Reconnaître la date de péremption d’un médicament et son tableau de classification
+@@ 2 | Soins infirmiers | Chirurgie | 2 semaines | Être capable d’assurer les soins de base
+- Accueillir le malade et sa famille et l’installer confortablement
+- Préparer le dossier du malade (dossier médical et dossier infirmier)
+- Préparer le malade et le matériel et assister le médecin lors de la visite médicale
+- Faire un lit avec ou sans aide
+- Assister le malade pour s’habiller et se déshabiller
+- Faire une toilette matinale
+- Faire une toilette intime pour les femmes
+- Faire un soin de bouche
+- Faire un shampoing au lit
+- Pratiquer les soins préventifs d’escarres
+- Transporter le malade du chariot au lit et vice versa, et de la chaise roulante au lit
+- Placer le bassin
+- Prélèvement aseptique des urines
+- Présenter le repas au malade et l’assister
+- Expliquer au patient l’hygiène corporelle et vestimentaire et son importance
+- Établir une feuille de température
+## Prendre, enregistrer et interpréter les constantes :
+> Pouls
+> Tension artérielle
+> Température
+> Respiration
+> Diurèse
+> Poids
+> Taille
+- Préparer un lit d’opéré
+- Effectuer le premier lever
+## Placer une perfusion et une transfusion chez un malade :
+> Sang
+> Plasma
+> Culot plaquettaire
+- Procéder aux différents lavages des mains et enfiler les gants
+## Administrer une thérapeutique par voie :
+> Orale
+> Intramusculaire
+> Sous-cutanée
+> Intradermique
+> Intraveineuse
+## Effectuer les pansements suivants :
+> Pansement simple
+> Pansement humide
+> Pansement avec ablation des fils ou d’agrafes
+- Placer une sonde vésicale chez une malade
+- Faire un lavement évacuateur
+- Procéder à une oxygénothérapie
+@@ 2 | Soins infirmiers | Bloc de stérilisation | 2 semaines | Être capable de veiller à l’entretien et à la stérilisation du matériel
+## Veiller, pour les instruments de chirurgie, à :
+> La décontamination
+> Le lavage
+> La désinfection
+> Le conditionnement
+> La stérilisation
+> Le contrôle
+## Veiller à l’entretien des appareils de stérilisation :
+> Autoclave
+> Appareil de formol
+> Autres moyens de stérilisation disponibles
+## Préparer et stériliser une boîte de :
+> Champs opératoires
+> Casaques
+> Compresses
+> Instruments d’accouchement
+@@ 3 | SMI | Service SMI (consultation prénatale et SMI) | 4 semaines (35 h / semaine) | Être capable d’assurer les différentes activités de la SMI
+# I. Consultation prénuptiale
+- Participer à la consultation prénuptiale
+# II. Consultation préconceptionnelle
+- Participer à la consultation préconceptionnelle
+# III. Consultation prénatale
+## Préambule
+- Préparer et organiser la salle
+- Accueillir la femme enceinte
+- Établir un interrogatoire
+- Examiner la femme enceinte
+- Diagnostiquer et dater la grossesse
+- Informer la femme sur le suivi de sa grossesse
+- Pratiquer l’éducation sanitaire de la gestante
+- Organiser des séances de préparation psychoprophylactique de la parturiente
+## Prise en charge de la femme enceinte au 1er trimestre
+- Préparer et organiser la salle
+- Accueillir la femme enceinte
+- Établir un interrogatoire
+- Examiner la femme enceinte
+- Diagnostiquer et dater la grossesse
+- Informer la femme sur le suivi de sa grossesse
+## Examiner la femme : examen général et toucher vaginal :
+> Examen de la vulve (aspect, coloration…)
+> Examen au spéculum
+> Toucher vaginal combiné au palper
+- Demander le bilan standard systématique chez la femme enceinte (biologique et échographique) et interpréter les résultats
+- Pratiquer un FCV
+- Identifier les facteurs de risque
+- Planifier la surveillance de la grossesse
+- Établir un dossier et remettre le carnet de suivi de la grossesse
+## Prise en charge de la femme enceinte au 2e trimestre
+- Faire l’anamnèse
+- Pratiquer l’examen général de la gestante
+## Pratiquer l’examen obstétrical :
+> Inspection
+> Mensuration
+> Palpation
+> Auscultation
+> TV : état de la vulve et du périnée, position du col, longueur, ouverture du col, état des membranes
+- Demander les examens paracliniques nécessaires (biologiques et échographiques)
+- Identifier les grossesses pathologiques
+- Veiller à la vaccination antitétanique
+## Prise en charge de la femme enceinte au 3e trimestre
+- Pratiquer l’examen général de la gestante
+## Pratiquer l’examen obstétrical :
+> Inspection
+> Mensuration
+> Palpation
+> Auscultation
+> TV : position du col, longueur, consistance et dilatation, membranes, position fœtale, exploration du bassin
+- Demander et interpréter les examens paracliniques nécessaires (biologiques et échographiques)
+- Identifier les facteurs de risque
+- Poser le diagnostic et le pronostic d’accouchement
+- Faire l’éducation sanitaire de la gestante
+- Transcrire les résultats sur le dossier prénatal et le carnet de santé
+- Orienter la femme vers les structures spécialisées
+# IV. Consultation postnatale
+## La mère
+- Établir le dossier postnatal
+- Mener l’interrogatoire
+- Pratiquer l’examen clinique et gynécologique
+- Orienter l’accouchée vers un centre de planification familiale
+- Pratiquer l’ablation de fils de l’épisiotomie ou de la plaie de césarienne
+- Initier la femme à la rééducation périnéale
+- Prescrire les médicaments autorisés
+- Pratiquer une échographie
+## L’enfant
+- Accueillir la mère et l’enfant au niveau de la SMI
+- S’assurer de la bonne marche de l’allaitement maternel
+- Suivre la croissance staturo-pondérale et la dentition de l’enfant
+- Apprécier le développement psychomoteur du nouveau-né, du nourrisson et du petit enfant jusqu’à l’âge préscolaire
+- Pratiquer correctement la vaccination obligatoire
+- Administrer la vitamine D au nourrisson
+- Établir et tenir le carnet de santé de l’enfant
+- Prévenir et dépister les maladies carentielles (rachitisme, malnutrition…)
+- Orienter les enfants présentant des anomalies
+- Prévenir les diarrhées chez le nourrisson
+- Établir les statistiques hebdomadaires
+- Établir un rapport d’activité de la SMI
+@@ 3 et 4 | Soins obstétricaux | Salle de naissance | 2 semaines | Être capable de prendre en charge la femme et son nouveau-né en salle de naissance
+# À l’admission
+- Accueillir la parturiente
+- Réaliser un interrogatoire complet
+- Réaliser un examen général
+## Pratiquer l’examen obstétrical :
+> Pratiquer la palpation
+> Mesurer la hauteur utérine
+> Ausculter les bruits du cœur fœtal et interpréter les résultats
+> Pratiquer un toucher vaginal : état du col, membranes, liquide amniotique, présentation et examen du bassin
+- Pratiquer les examens paracliniques systématiques (groupage Rh, glycémie…)
+- Réaliser une prise en charge psychoprophylactique (rassurer la femme, lui apprendre à respirer et à pousser…)
+- Noter l’examen d’entrée sur le dossier et le registre d’admission
+- Établir le dossier obstétrical de la parturiente
+- Prescrire les médicaments autorisés
+- Orienter la parturiente suivant le cas
+# En salle de naissance
+- Établir et interpréter un partogramme et signaler toutes anomalies au médecin
+- Établir la courbe de contraction utérine
+- Pratiquer et interpréter la tococardiographie
+- Apprécier l’état de la poche des eaux
+- Rompre la poche des eaux au moment opportun
+- Apprécier les caractéristiques du liquide amniotique
+- Établir une courbe de dilatation du col
+- Apprécier la progression de la présentation par rapport au bassin
+- Poser le pronostic d’accouchement
+## Préparation de la femme à l’accouchement
+- Désinfecter la table d’accouchement
+- Préparer les solutés pour une éventuelle expansion volémique (transfusion)
+- Vérifier la source d’oxygène
+- Vérifier la source d’aspiration
+- Préparer les boîtes d’accouchement et d’épisiotomie
+- Préparer la boîte de forceps
+- Préparer le matériel pour anesthésie locale
+- Préparer et assister le médecin anesthésiste lors d’une ALR/AG
+- Surveiller la parturiente ayant subi une ALR
+- Pratiquer un accouchement sous ALR
+- Préparer le matériel pour l’accueil et les soins du nouveau-né
+- Pratiquer les soins d’hygiène chez la parturiente (toilette vulvaire, rasage)
+- Pratiquer un sondage vésical et un lavement évacuateur si besoin
+- Prendre un abord veineux chez la parturiente
+- Pratiquer une échographie si nécessaire
+- Dépister une dystocie du travail et la signaler au médecin
+## Pratiquer un accouchement dans les normes
+- Infiltration du nerf honteux
+- Pratiquer l’épisiotomie et sa réfection
+- Pratiquer l’accouchement eutocique
+- Dépister un accouchement dystocique et le signaler au médecin
+- Participer au déclenchement du travail
+- Surveiller un déclenchement du travail
+- Pratiquer l’accouchement par le siège
+- Diagnostiquer et prendre en charge l’accouchement d’une grossesse multiple
+- Pratiquer la version par manœuvre interne sur le 2e jumeau et la grande extraction du siège en cas de milieu non médicalisé
+- Participer à la pratique des manœuvres de Mauriceau, Bracht, Jacquemier en présence de la sage-femme tutrice et du médecin spécialiste
+- Préparer et assister la parturiente à une césarienne (recueil du nouveau-né au bloc d’accouchement)
+- Assister le médecin lors de l’application du forceps
+- Pratiquer la section et la ligature du cordon ombilical
+- Scorer le nouveau-né à la naissance (APGAR) à la 1re minute
+- Prévenir l’hypothermie
+- Libérer les voies aériennes supérieures
+- Pratiquer une aspiration oro-pharyngée
+- Participer à la réanimation du nouveau-né en salle de naissance
+- Pratiquer une aspiration endotrachéale chez le nouveau-né intubé
+- Pratiquer une oxygénothérapie chez le nouveau-né
+- Réaliser un massage cardiaque externe chez le nouveau-né si détresse circulatoire
+- Pratiquer une insufflation en pression positive
+- Participer à la mise en place d’une intubation endotrachéale si détresse respiratoire, en présence de l’équipe pluridisciplinaire
+- Participer à la mise en place du cathétérisme ombilical en cas de réanimation métabolique chez le nouveau-né en détresse vitale
+- Pratiquer l’injection des différents traitements lors de la réanimation du nouveau-né
+- Réévaluer l’état du nouveau-né à la 5e et à la 10e minute (score d’APGAR)
+- Réaliser une glycémie capillaire chez le nouveau-né
+- Réaliser un pH-métrie
+- Réaliser un test de Guthrie
+- Rechercher d’éventuelles malformations chez le nouveau-né
+- Rechercher les réflexes archaïques chez le nouveau-né
+- Pratiquer la manœuvre d’Ortolani
+- Mesurer : poids, taille, périmètre crânien et thoracique
+- Pratiquer les soins des yeux (collyre) et la vitamine K
+- Procéder à la toilette du nouveau-né
+- Procéder à l’habillage du nouveau-né
+- Identifier le nouveau-né et prendre l’empreinte sur le dossier
+- Pratiquer une délivrance normale
+- Examiner le délivre
+- Réaliser des prélèvements sur le placenta si nécessaire
+- Dépister un éventuel saignement après l’accouchement
+- Pratiquer une délivrance manuelle (en cas d’hémorragie)
+- Pratiquer une révision utérine si nécessaire
+- S’assurer de l’intégrité du col, du vagin, du périnée, du méat urinaire et de l’anus en utilisant les valves
+- Administrer les utérotoniques à l’accouchée après prescription médicale
+- Assurer la surveillance immédiate de l’accouchée et du nouveau-né (pendant 2 h au bloc d’accouchement)
+- Mettre au sein le nouveau-né dans la demi-heure qui suit l’accouchement
+- Veiller au nettoyage, à la stérilisation et au rangement du matériel
+- Veiller au nettoyage et au rangement de la salle de naissance
+- Compléter le dossier médical, le carnet de santé et le plan de soins
+- Déclarer l’accouchement et s’assurer de la déclaration de naissance à l’état civil
+- Établir le certificat d’accouchement, le congé de maternité et toutes les formalités demandées par les caisses de sécurité sociale ou autres organismes
+- Accompagner la famille en cas de deuil maternel ou fœtal
+@@ 4 | Soins obstétricaux | Suites de couches | 2 semaines | Être capable de prendre en charge la post-accouchée et le nouveau-né en suites de couches
+# I. Mère
+- Surveiller l’état général de l’accouchée pendant les premières 24 h
+- Mesurer et transcrire les constantes de l’accouchée (TA, pouls, T°)
+- Apprécier l’involution utérine en mesurant la HU
+- Surveiller et apprécier les caractères des lochies
+- Réaliser un lever précoce
+- Dépister les signes d’une phlébite (membre inférieur)
+- Réaliser une toilette vulvaire
+- Réaliser les soins d’une épisiotomie ou d’une déchirure
+- Réaliser un soin du sein
+- Assister l’accouchée lors de la 1re mise au sein
+- Réaliser un bandage du sein
+- Prévenir et dépister une complication du post-partum
+- Dépister toutes anomalies mammaires (crevasses, engorgement)
+- Effectuer une vidange du sein en cas d’engorgement avec un tire-lait
+- Examiner la vulve et le périnée
+- Réaliser un TV afin d’apprécier l’état du vagin, du col et de l’utérus
+- Assurer les soins d’hygiène de l’accouchée
+- S’assurer de l’administration de la sérothérapie anti-D si nécessaire
+# II. Nouveau-né
+- Surveiller l’état général du nouveau-né
+- Surveiller la coloration du nouveau-né
+- Surveiller la 1re miction du nouveau-né
+- Surveiller la 1re selle (méconium) du nouveau-né
+- Assurer la mise au sein du nouveau-né
+- Privilégier l’allaitement maternel
+- Effectuer les soins du cordon
+- Effectuer la toilette du nouveau-né (visage / siège)
+- Réaliser une vaccination chez le nouveau-né (BCG, polio, hépatite)
+- Pratiquer le langage en abduction
+# III. Conseils et orientation
+- Donner des conseils pour l’hygiène et l’alimentation de la femme allaitante et du nouveau-né
+- Dépister toutes anomalies de la femme et du nouveau-né et les signaler au médecin
+- Conseiller et orienter l’accouchée pour une éventuelle contraception
+- Orienter l’accouchée et son enfant vers un centre de SMI
+- Préparer la sortie de l’accouchée (dossier administratif)
+@@ 4 | Néonatologie | Service de néonatologie | 4 semaines | Être capable de participer à la prise en charge du nouveau-né admis en service de néonatologie
+- Accueillir les nouveau-nés à risque en néonatologie
+- Identifier le nouveau-né
+- Procéder au lavage des mains et porter une tenue réglementaire
+- Participer et appliquer les règles d’hygiène chez le nouveau-né et la mère
+- Assurer la mise en marche d’un incubateur / table chauffante / table de réanimation
+- Entretenir quotidiennement et stériliser un incubateur
+- Placer le nouveau-né dans l’incubateur
+- Placer le nouveau-né sous monitoring (saturation, pouls, TA)
+- Transférer et transporter selon les normes le nouveau-né à risque
+- Assurer les soins d’hygiène et de confort (dans l’incubateur)
+- Réaliser les prélèvements sanguins et examens complémentaires des nouveau-nés à risque (selon la pathologie)
+- Assurer et veiller à l’élevage des prématurés (tous les soins)
+- Stimuler les nouveau-nés prématurés par le contact pour stimuler les réflexes
+- Surveiller l’état métabolique des nouveau-nés (déshydratation, dénutrition, hypoglycémie)
+- Placer une sonde naso-gastrique
+- Surveiller et assurer l’alimentation par gavage gastrique (continu et discontinu)
+- Surveiller et assurer l’alimentation entérale (biberon)
+- Libérer les voies aériennes supérieures en cas de détresse respiratoire
+- Placer et surveiller les nouveau-nés sous oxygène
+- Pratiquer une aspiration trachéale
+- Pratiquer des insufflations en pression positive (en cas de détresse respiratoire)
+- Pratiquer un massage cardiaque externe (en cas de détresse cardiaque)
+- Surveiller un nouveau-né sous ventilation artificielle
+- Installer et surveiller les nouveau-nés sous photothérapie continue et discontinue
+- Préparer le matériel et assister le médecin lors d’une exsanguino-transfusion et surveiller le nouveau-né
+- Transcrire tous les soins prodigués sur le dossier
+- Administrer les traitements prescrits
+@@ 5 | SSR / PF | PF | 3 semaines | Être capable de prendre en charge une femme en service de PF
+- Préparer le local et le matériel pour une consultation de PF
+## Préparer le local et le matériel pour :
+> Une séance de counseling
+> Une séance d’I.E.C. pour un groupe
+- Accueillir aimablement et installer les femmes et les couples au niveau des services de PF
+- Conduire une séance de counseling en PF en adoptant une attitude appropriée à chaque situation
+- Animer une séance d’I.E.C. pour un groupe cible en PF
+- Pratiquer l’examen général et l’examen des seins
+- Expliquer et pratiquer la technique d’auto-palpation des seins
+- Dépister les anomalies des seins
+- Prendre le poids et la TA
+- Pratiquer l’examen pelvien complet
+- Dépister les infections du tractus génital par l’examen gynécologique
+- Pratiquer une échographie gynécologique
+- Préparer le matériel pour frottis cervico-vaginaux, test de Schiller, de Hinselmann, prélèvements biopsiques et prélèvement cytologique (sein)
+- Pratiquer le frottis cervico-vaginal
+- Pratiquer le prélèvement vaginal
+- Expliquer à une patiente la conduite du traitement codifié d’une infection du tractus génital
+- Dépister et orienter la femme en cas d’anomalies vers un milieu spécialisé
+- Orienter le choix de la contraception pour le couple
+- Proposer le type de DIU approprié à la femme en fonction des résultats du counseling et de l’examen
+- Préparer le matériel d’insertion du DIU
+- Pratiquer l’insertion du DIU
+- Expliquer à la patiente la CAT en cas d’effets secondaires majeurs, et la référer vers la consultation médicale
+- Demander le bilan biologique en cas de contraception hormonale et interpréter les résultats
+- Assurer le suivi et les visites de contrôle sous DIU
+- Retirer le DIU si nécessaire, à condition que les fils soient visibles
+- Prescrire et expliquer le mode d’utilisation de la contraception hormonale
+- Prescrire et expliquer le mode d’utilisation de la contraception locale
+- Prescrire et expliquer le mode d’utilisation de la contraception barrière
+- Réapprovisionner la femme en produits contraceptifs
+- Entretenir et stériliser le matériel utilisé
+- Analyser les données statistiques d’un service de PF pour identifier les aspects positifs, les limites des actions entreprises et proposer un plan d’action pour améliorer la prévalence contraceptive globale et par méthode
+- Calculer la consommation mensuelle moyenne (CMM) des produits contraceptifs
+- Établir les commandes de produits contraceptifs en utilisant le bon de commande du PNPF
+- Participer à la réception et au stockage des produits contraceptifs
+@@ 5 et 6 | Obstétrique pathologique | GHR | 7 semaines | Être capable de participer à la prise en charge d’une gestante présentant une GHR
+- Préparer le chariot d’urgence
+- Accueillir la gestante
+- Identifier la gestante
+- Faire l’anamnèse
+- Installer la gestante confortablement
+- Mettre un abord veineux si nécessaire sur prescription médicale
+- Pratiquer l’examen général et obstétrical
+- Pratiquer et interpréter les examens paracliniques nécessaires (biologiques, échographiques, radiologiques et tococardiographie)
+- Préparer et assister le médecin lors d’une amniocentèse
+- Assurer la surveillance de la parturiente après exploration
+- Participer à la pose du diagnostic au sein de l’équipe pluridisciplinaire
+- Participer à la pose du pronostic immédiat
+- Participer au déclenchement du travail
+- Mettre en place un monitoring materno-fœtal
+- Établir une fiche de surveillance
+- Pratiquer les soins nécessaires
+- Assurer la surveillance materno-fœtale
+- Assister à la visite médicale
+- Poser une conduite à tenir et poser un pronostic
+- Administrer le traitement prescrit
+- Transcrire les résultats des examens et les soins sur le dossier médical et la fiche de surveillance
+- Prévenir et dépister les infections anténatales
+- Accompagner la patiente au bloc opératoire ou en salle de naissance avec son dossier obstétrical
+@@ 5 | Pédiatrie | Service de pédiatrie | 2 semaines | Être capable de participer à la prise en charge d’un enfant malade
+- Accueillir l’enfant et sa famille
+- Installer l’enfant confortablement
+- Participer à l’interrogatoire auprès de sa famille
+- Participer à l’examen de l’enfant
+- Préparer le matériel, le dossier et assister le médecin lors de la visite
+- Participer à la mise à jour de la fiche de surveillance
+- Préparer le chariot d’urgence
+- Participer à l’exécution des soins spécifiques du malade
+- Assurer les soins d’hygiène et de confort
+- Prendre les mensurations (poids, taille…)
+- Mesurer et transcrire les paramètres vitaux et les soins
+- Pratiquer, poser et surveiller une perfusion
+- Participer à la surveillance d’une transfusion
+- Préparer le matériel pour une ponction lombaire
+- Participer à la surveillance de l’enfant lors de l’oxygénothérapie
+- Pratiquer les soins de l’érythème fessier
+- Pratiquer les soins du muguet
+- Pratiquer les soins de séborrhée
+- Réaliser les techniques de réchauffement et de refroidissement
+- Réaliser et surveiller un enfant sous aérosolthérapie (médicamenteux et non médicamenteux)
+- Préparer et donner un biberon
+- Participer à la préparation des régimes thérapeutiques
+- Éduquer l’enfant malade et sa famille en matière d’hygiène et de régime alimentaire
+## Expliquer aux parents la nécessité et les modalités de :
+> L’allaitement maternel
+> La diversification alimentaire et le sevrage progressif
+> L’alimentation au cours d’une maladie et le respect du régime indiqué
+> L’hygiène corporelle, alimentaire et les mesures hygiéno-diététiques nécessaires
+> L’éducation des parents en matière de prévention et de prophylaxie des affections
+@@ 6 | Gynécologie | Service de gynécologie | 2 semaines | Être capable de participer à la prise en charge d’une femme en service de gynécologie
+- Préparer la salle d’examen de consultation
+- Préparer le matériel nécessaire pour les différents examens
+- Accueillir et installer la patiente
+- Procéder à l’interrogatoire de la patiente
+- Prendre les constantes (T°, TA, pouls), la glycémie capillaire et la chimie des urines
+- Pratiquer un examen gynécologique
+- Pratiquer un examen sénologique et orienter la patiente vers le médecin spécialiste si besoin
+- Pratiquer un frottis cervico-vaginal et acheminer le prélèvement
+- Pratiquer un test de Schiller
+- Préparer le matériel pour colposcopie et assister le médecin
+- Préparer le matériel et assister à une biopsie cervicale et utérine
+- Assister le médecin lors d’une cœlioscopie
+- Assister au prélèvement cytologique des seins
+- Préparer et surveiller la patiente pour une ponction de Douglas
+- Préparer le matériel et la patiente pour un curetage
+- Assister et accompagner la patiente au bloc lors d’un curetage
+- Participer au diagnostic d’une affection gynécologique
+- Préparer et assister la patiente présentant une hémorragie gynécologique pour l’examen médical
+- Préparer la patiente pour une intervention gynécologique
+- Informer et rassurer la femme sur les résultats des examens
+- Préparer, conduire et évaluer une séance d’éducation sur les IST
+- Transcrire les soins prodigués sur le dossier médical
+@@ 6 | Réanimation | Bloc réanimation en gynéco-obstétrique | 2 semaines | Être capable de participer à la prise en charge d’une femme en salle de réanimation
+- Recevoir et installer une opérée
+- Surveiller une patiente en réanimation
+- Surveiller une patiente ayant subi un curage, un curetage ou un cerclage
+- Participer à la réanimation cardio-respiratoire chez une patiente
+- Pratiquer une transfusion sanguine en respectant les règles d’hémovigilance sur prescription médicale
+- Dépister les incidents et les accidents de la transfusion et les signaler au médecin réanimateur
+- Participer à la surveillance d’une patiente sous monitorage (invasif et non invasif)
+- Surveiller les paramètres hémodynamiques de l’opérée
+- Participer à l’évaluation de la douleur chez une patiente opérée
+- Dépister d’éventuelles complications post-anesthésiques (saignement, agitation, troubles hémodynamiques)
+- Dépister une éventuelle complication postopératoire et la signaler au médecin réanimateur
+- Effectuer le lever précoce
+- Transcrire les examens, les soins et les traitements effectués sur le dossier médical et la fiche de surveillance
+- Travailler en équipe pluridisciplinaire s’agissant des soins d’urgence
+- Participer à la prise en charge d’une femme admise au service de réanimation
+@@ 1 | Échographie | Service d’échographie | 4 semaines | Être capable de faire le suivi échographique d’une grossesse normale et / ou d’une contractante sous DIU
+- Prendre connaissance de l’appareil et de son fonctionnement
+- Préparer la femme pour une exploration échographique
+- Identifier échographiquement les organes génitaux internes et les organes voisins
+## L’écho au 1er trimestre
+- Identifier le sac gestationnel
+- Préciser la topographie de la grossesse et le nombre d’embryons
+- Évaluer la biométrie embryonnaire
+- Évaluer la vitalité embryonnaire
+- Apprécier l’insertion trophoblastique
+- Apprécier la clarté nucale
+- Dater le début de la grossesse et estimer ainsi la date de l’accouchement
+## L’écho au 2e trimestre
+- Estimer la morphologie générale du fœtus et du cordon ombilical
+- Évaluer la biométrie fœtale
+- Évaluer la vitalité fœtale
+- Vérifier l’insertion placentaire
+- Évaluer la quantité du liquide amniotique
+- Déterminer l’âge gestationnel biométrique
+## L’écho au 3e trimestre
+- Estimer la morphologie générale du fœtus et du cordon ombilical
+- Déterminer la présentation fœtale
+- Évaluer la biométrie fœtale
+- Évaluer la vitalité fœtale
+- Vérifier l’insertion placentaire
+- Évaluer la quantité du liquide amniotique
+- Déterminer l’âge gestationnel biométrique
+- Contrôle échographique du DIU
+@@ 1 | Préparation à la naissance et à la parentalité | Service prénatal | 2 semaines | Être capable d’assurer la préparation psychoprophylactique à la naissance et à la parentalité
+- Accueillir la femme ou le couple en service prénatal
+- Préparer les parents à la naissance et à l’arrivée de l’enfant
+- Annoncer le diagnostic de naissance
+- Accompagner les couples pour éviter les troubles relationnels avec leur enfant
+- Soutenir les parents dans leur rôle en leur donnant des informations et les repères nécessaires
+- Assurer une bonne coordination des professionnels de santé avant et après la naissance de l’enfant
+- Préparer à l’accueil de l’enfant : apprentissage des soins, alimentation, couchage et prévention
+- Soutenir la fonction parentale en donnant les informations nécessaires
+- Améliorer les connaissances et les compétences pratiques des parents
+- Soutenir les parents en cas de difficultés
+@@ 1 et 2 | PMC et grossesse | GHR ou consultation GHR externe | 3 semaines | Être capable de participer à la prise en charge d’une grossesse à haut risque
+- Préparer le chariot d’urgence
+- Accueillir la gestante
+- Identifier la gestante
+- Faire l’anamnèse
+- Installer la gestante confortablement
+- Prendre un abord veineux si nécessaire
+- Pratiquer l’examen général et obstétrical
+- Demander et interpréter les examens paracliniques nécessaires (biologiques, échographiques, radiologiques et tococardiographie)
+- Préparer et assister à l’amniocentèse
+- Assurer la surveillance de la parturiente après exploration
+- Participer à la pose du diagnostic
+- Participer à la pose du pronostic immédiat
+- Participer au déclenchement du travail
+- Pratiquer un monitoring pour la gestante
+- Établir une fiche de surveillance
+- Pratiquer les soins nécessaires
+- Assurer la surveillance materno-fœtale
+- Assister à la visite médicale
+- Poser une conduite à tenir et poser un pronostic
+- Administrer le traitement prescrit
+- Transcrire les résultats des examens et les soins sur le dossier médical et la fiche de surveillance
+- Prévenir et dépister les infections anténatales
+- Accompagner la patiente au bloc opératoire avec le dossier
+- Coordonner entre les différents intervenants dans la prise en charge d’une gestante avec une pathologie associée
+- Veiller au respect de la démarche administrative (statistiques, compte rendu, rapport d’activité, planning…)
+- Participer à l’encadrement pratique des élèves sages-femmes cadettes
+@@ 2 | TIC | Cellules de communication | 2 semaines | Être capable de maîtriser les outils d’information et de communication
+- Maîtriser l’utilisation de l’outil informatique
+- Construire une communication orale et écrite
+- Participer à la communication interne et externe du service
+- Réaliser une recherche scientifique
+- Participer à la réalisation d’un projet de service
+- Confectionner des documents d’information sanitaire
+- Organiser, gérer et animer une séance d’éducation sanitaire
+- Organiser et gérer des campagnes de sensibilisation et de dépistage
+- Recueillir, analyser les données statistiques des activités de la sage-femme et les archiver en version numérique
+@@ 3 | Psychologie du travail | CMS / médecine du travail et autres sites | 2 semaines | Être capable d’identifier des situations professionnelles à retentissement psychosocial et de participer à leur résolution
+- Développer des capacités relationnelles et travailler en équipe
+- Participer à des actions de recherche et d’évaluation de pratiques professionnelles
+- Dépister les situations à risque médical, psychologique et social au cours de la grossesse
+- Dépister les situations à risque médical, psychologique et social chez le personnel soignant (épuisement professionnel…)
+- Participer à l’organisation du travail en équipe
+- Gérer la communication et les rapports conflictuels
+- Parrainer les élèves cadettes
+@@ 3 | Gestion et management hospitalier | Services gynéco-obstétriques, SMI, DRH | 2 semaines | Être capable de développer un système de management de la qualité des prestations de services en établissement de santé
+# Gestion matérielle
+- Veiller à l’entretien du matériel et des locaux
+- Participer à l’approvisionnement du matériel consommable et non consommable
+- Participer à la gestion du stock
+# Gestion administrative
+- Veiller à la traçabilité des prestations
+- Respecter les normes du circuit des dossiers médicaux
+- Veiller à la conservation et à l’archivage des dossiers
+- Participer à l’élaboration et à l’affichage des activités du service (rotation du personnel, notes de service…)
+# Gestion des ressources humaines
+- Participer à la répartition des tâches entre l’équipe soignante
+- Veiller à la sécurité du personnel du service
+- Veiller à la rotation rationnelle des ressources humaines
+# Gestion des utilisateurs
+- Veiller aux conditions de transfert ou d’évacuation des utilisateurs
+- Gérer l’admission, l’hospitalisation et la sortie des utilisateurs
+- Gérer les visites des parents
+@@ 3 | Travaux séminaires (APP, psychologie du travail et management hospitalier) | Planning familial, néonatologie, GHR, suites de couches | 4 semaines | Être capable d’analyser des situations professionnelles vécues en stage et de travailler en équipe pluridisciplinaire
+- Identifier, verbaliser et analyser une situation professionnelle vécue durant les stages
+- Développer une posture réflexive chez la future professionnelle
+- Proposer des pistes de réflexion pour l’amélioration des pratiques professionnelles
+- Travailler et manager des équipes pluridisciplinaires
+`;
+function parse(t){return t.split(/^@@ /m).map(b=>b.trim()).filter(Boolean).map(b=>{const L=b.split('\n'),H=L.shift().split('|').map(s=>s.trim());return{id:uid(),semestre:H[0],module:H[1],stage:H[2],volume:H[3],objectif:H[4],items:L.filter(x=>x.trim()).map(l=>{const q=/^(##|#|-|>) (.*)$/.exec(l.trim()),c=q[1],t=q[2];return c==='#'?{t,k:'h',o:''}:c==='##'?{t,k:'g',o:''}:{t,r:false,m:false,o:'',l:c==='>'?1:0}})}})}
+const sample=()=>parse(DATA)[0];
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||!Array.isArray(S.modules)||!S.modules.length)S={modules:parse(DATA)};
+let cur=0,armed=null;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const stat=m=>{const c=m.items.filter(i=>!i.k),n=c.length,r=c.filter(i=>i.r).length;return{n,r,p:n?Math.round(r/n*100):0}};
+const prog=m=>{const s=stat(m);return `<span>${s.r}/${s.n} réalisés · ${s.p} %</span><div class="bar"><i style="width:${s.p}%"></i></div>`};
+const title=m=>[m.module||'Module sans titre',m.stage].filter(Boolean).join(' – ');
+function item(it,i){const x='<button class="x" data-a="delItem" aria-label="Supprimer la ligne" title="Supprimer">×</button>';if(it.k)return `<div class="obj lab ${it.k}" data-i="${i}"><div class="ot" contenteditable="true" data-f="t" role="textbox" aria-label="Titre">${esc(it.t)}</div>${x}</div>`;return `<div class="obj${it.r?' done':''}${it.l?' lv1':''}" data-i="${i}"><div class="ot" contenteditable="true" data-f="t" role="textbox" aria-label="Objectif">${esc(it.t)}</div><label class="ck"><input type="checkbox" data-f="r" ${it.r?'checked':''} aria-label="Réalisé"><span></span></label><label class="ck m"><input type="checkbox" data-f="m" ${it.m?'checked':''} aria-label="Maîtrisé"><span></span></label><input class="ob" data-f="o" placeholder="Observation" value="${esc(it.o)}">${x}</div>`}
+function cover(total){return `<section class="leaf cover" data-p="0"><div class="inner"><p class="sub">Mon suivi personnel</p><h1>Carnet de stage</h1><div class="hearts">♡ ♡ ♡</div><ul class="toc">${S.modules.map((m,i)=>`<li><button class="t" data-a="go" data-n="${i+1}"><b>${esc(m.module||'Module sans titre')}</b><span class="s">${esc(m.stage)}${m.semestre?' · Semestre '+esc(m.semestre):''}</span><div class="prog" data-prog="${m.id}">${prog(m)}</div></button></li>`).join('')}</ul><div class="row"><button data-a="addMod">+ Ajouter un module</button></div></div><div class="pn">1 / ${total}</div></section>`}
+function page(m,i,total){return `<section class="leaf mod" data-p="${i+1}" data-id="${m.id}"><div class="inner"><h2 data-title>${esc(title(m))}</h2><div class="fields"><label class="f">Semestre<input data-k="semestre" value="${esc(m.semestre)}"></label><label class="f">Module<input data-k="module" value="${esc(m.module)}"></label><label class="f">Stage<input data-k="stage" value="${esc(m.stage)}"></label><label class="f">Volume horaire<input data-k="volume" value="${esc(m.volume)}"></label><label class="f wide">Objectif général<textarea data-k="objectif" rows="2">${esc(m.objectif)}</textarea></label></div><div class="prog" data-prog="${m.id}">${prog(m)}</div><div class="thead"><span>Objectifs</span><span>Réalisé</span><span>Maîtrisé</span></div><div class="list">${m.items.map(item).join('')}</div><div class="row"><button data-a="addItem">+ Objectif</button><button class="danger" data-a="delMod">Supprimer ce module</button></div></div><div class="pn">${i+2} / ${total}</div></section>`}
+function render(){const total=S.modules.length+1;document.getElementById('book').innerHTML=cover(total)+S.modules.map((m,i)=>page(m,i,total)).join('');cur=Math.min(cur,total-1);layout()}
+function layout(){const L=[...document.querySelectorAll('.leaf')];L.forEach((el,i)=>{el.style.zIndex=L.length-i;el.classList.toggle('flipped',i<cur);el.inert=i!==cur});document.getElementById('ind').textContent=(cur+1)+' / '+L.length;document.getElementById('prev').disabled=cur===0;document.getElementById('next').disabled=cur===L.length-1;document.getElementById('prev').style.opacity=cur===0?.4:1;document.getElementById('next').style.opacity=cur===L.length-1?.4:1}
+function go(n){const t=S.modules.length+1;cur=Math.max(0,Math.min(t-1,n));layout()}
+function refreshProg(m){document.querySelectorAll(`[data-prog="${m.id}"]`).forEach(e=>e.innerHTML=prog(m))}
+function addMod(){S.modules.push({id:uid(),semestre:'',module:'Nouveau module',stage:'',volume:'',objectif:'',items:[{t:'',r:false,m:false,o:''}]});save();cur=S.modules.length;render()}
+const book=document.getElementById('book');
+const ctx=el=>{const leaf=el.closest('.leaf');const m=leaf&&S.modules.find(x=>x.id===leaf.dataset.id);const row=el.closest('.obj');return{leaf,m,row,i:row?+row.dataset.i:-1}};
+book.addEventListener('input',e=>{const el=e.target,{leaf,m,i}=ctx(el);if(!m)return;if(el.dataset.k){m[el.dataset.k]=el.value;if(el.dataset.k==='module'||el.dataset.k==='stage')leaf.querySelector('[data-title]').textContent=title(m)}else if(el.dataset.f&&i>=0){if(el.dataset.f==='t')m.items[i].t=el.textContent;else if(el.dataset.f==='o')m.items[i].o=el.value}save()});
+book.addEventListener('change',e=>{const el=e.target,{m,row,i}=ctx(el);if(!m||i<0||!/^[rm]$/.test(el.dataset.f))return;const it=m.items[i],f=el.dataset.f;it[f]=el.checked;if(f==='m'&&el.checked)it.r=true;if(f==='r'&&!el.checked)it.m=false;row.querySelector('[data-f="r"]').checked=it.r;row.querySelector('[data-f="m"]').checked=it.m;row.classList.toggle('done',it.r);refreshProg(m);save()});
+book.addEventListener('keydown',e=>{if(e.target.matches('.ot')&&e.key==='Enter'){e.preventDefault();e.target.blur()}});
+book.addEventListener('paste',e=>{if(e.target.matches('.ot')){e.preventDefault();document.execCommand('insertText',false,(e.clipboardData.getData('text/plain')||'').replace(/\s+/g,' '))}});
+book.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,{m,i}=ctx(b);
+if(a==='go')return go(+b.dataset.n);
+if(a==='addMod')return addMod();
+if(a==='addItem'){m.items.push({t:'',r:false,m:false,o:''});save();const y=b.closest('.inner').scrollTop;render();document.querySelector('.leaf:not(.flipped) .inner').scrollTop=y+300;const ots=document.querySelectorAll('.leaf:not(.flipped) .ot');ots[ots.length-1].focus();return}
+if(a==='delItem'){m.items.splice(i,1);save();const y=b.closest('.inner').scrollTop;render();document.querySelector('.leaf:not(.flipped) .inner').scrollTop=y;return}
+if(a==='delMod'){if(armed!==m.id){armed=m.id;b.textContent='Confirmer la suppression';setTimeout(()=>{armed=null;if(b.isConnected)b.textContent='Supprimer ce module'},3500);return}
+armed=null;S.modules=S.modules.filter(x=>x!==m);if(!S.modules.length)S.modules.push(sample());save();cur=0;render()}});
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+document.getElementById('addTop').onclick=addMod;
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(e.target.tagName)||e.target.isContentEditable)return;if(e.key==='ArrowRight')go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
+let tx=null;book.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+book.addEventListener('touchend',e=>{if(tx===null)return;const d=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(d)>70)go(cur+(d<0?1:-1))});
+render();
+</script>
+</body>
+</html>
